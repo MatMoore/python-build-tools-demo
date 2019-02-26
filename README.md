@@ -105,7 +105,7 @@ You just need one command - `pipenv` - to add, remove, or upgrade dependencies. 
 ### Some alternatives to Pipenv you might come accross
 [Poetry](https://github.com/sdispater/poetry) is a competitor to pipenv and seems very similar. I haven’t actually tried it yet, but it probably works just as well.
 
-I plotted the PyPi download stats to show the relative adoption of some different tools:
+I plotted the [PyPi download stats](https://packaging.python.org/guides/analyzing-pypi-package-downloads/) to show the relative adoption of some different tools:
 ![Popularity of tools over the last few months](https://raw.githubusercontent.com/MatMoore/python-build-tools-demo/master/tool-usage.png)
 
 You can also just use pip + virtualenv on their own. In this case you’ll need to create a file called `requirements.txt` file with all your dependencies in. However, this can become hard to manage for larger projects.
