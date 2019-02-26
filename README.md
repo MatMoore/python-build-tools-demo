@@ -19,7 +19,7 @@ Lots of tools have "env" in their name! Don't confuse them!
 - Usually your OS comes with *some version* of python
 - Task: Look at what is installed on your path. What version is it? Are there multiple pythons (python2 and python3)?
 - Debugging path issues
-- Forcing a particular interpreter `python3 -m pip`
+- Forcing a particular interpreter `python3 -m pip` - `-m` runs a module
 - What is PYTHONPATH and site-packages
 
 ### History of python 2 and 3 split
@@ -58,10 +58,19 @@ Lots of tools have "env" in their name! Don't confuse them!
 - `mkvirtualenv` for easier virtualenv management
 
 ## Creating packages
+- Levels of abstraction: classes/functions/data -> modules -> packages -> PyPI package
 - Why create standalone packages?
 - Look at a setup.py for a real package
 - Minimum viable package
 - Declaring dependencies
+- `setuptools` replaces `distutils`
+- Eggs and Wheels
 - Typically you want to test against multiple versions of python using CI
 - Publishing to pypi
 - https://keepachangelog.com/en/1.0.0/
+
+## Other resources
+- [Hitchhikers guide to python](https://docs.python-guide.org/)
+- [Interpreter options](https://docs.python.org/3/using/cmdline.html#interface-options)
+- [Installing packages with pip and virtualenv](https://packaging.python.org/tutorials/installing-packages/#creating-virtual-environments)
+- [Distributing packages](https://docs.python.org/3/distributing/index.html)
