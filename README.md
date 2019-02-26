@@ -88,7 +88,7 @@ Boom! Now you have that version of python. To set it as the default for your pro
 - `Pipfile` replaces `requirements.txt` and is likely to become the standard format
 - Locking ensures repeatable builds
 - Pipfile is for direct dependencies
-- Compatable with semantic versioning ("I want to be on the latest patch version for 2.4")
+- [Compatable with semantic versioning](https://pipenv.readthedocs.io/en/latest/basics/#specifying-versions-of-a-package) ("I want to be on the latest patch version for 2.4")
 - Analogous to `Gemfile` and `Gemfile.lock` in ruby
 - When you create a project you can choose the python version
 
