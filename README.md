@@ -12,18 +12,18 @@ Going to focus on 3 types of tools
 - Managing application dependencies
 - (If there's time) creating reusable python packages
 
-Lots of tools have "env" in their name! Don't confuse them!
+*Note: Lots of tools have "env" in their name! Don't get them confused!*
 
 ## Installing pythons
 
-### What gets installed by default (on a mac)
+### What gets installed by default?
 
 - Usually your OS comes with *some version* of python
 - Task: Look at what is installed on your path. What version is it? Are there multiple pythons (python2 and python3)?
 - Debugging path issues
-- *Pip* is the python package manager, and should also be on your path. Nowadays it's installed as part of the python installation
+- `pip` is the python package manager, and should also be on your path. It's installed as part of the python installation.
 - What is PYTHONPATH and site-packages?
-- Forcing a particular interpreter `python3 -m pip` - `-m` runs a module
+- You can also run pip by passing an option to the python interpreter: `python3 -m pip`. The `-m` can be used to execute the code in any python module.
 
 
 ### History of python 2 and 3 split
@@ -32,8 +32,25 @@ Lots of tools have "env" in their name! Don't confuse them!
 - Who's still using python 2 on their projects?
 
 ### Virtualenv = a copy of your interpreter and packages
-*A virtualenv* is a tool for installing stuff into a specific directory, so you can have a different set of dependencies for different projects. A virtualenv contains its own copy of the python interpreter used to create it, and its own copy of pip.
+Normally when you install stuff through the `pip` command, you are installing it to some site-packages directory somewhere.
 
+If you have a lot of different projects, they will all share the same dependencies, and your development environment will be different to production.
+
+We use virtualenvs to solve this problem. A virtualenv is a project-specific directory that dependencies can be installed to, so you can isolate the dependencies from different projects and manage them separately.
+
+It contains its own copy of the python interpreter used to create it, and its own copy of pip.
+
+There are two tools to create virtualenvs:
+- virtualenv is the original tool, and needs to be itself installed through pip
+- on newer versions of python you can just run `python -m venv DIRECTORY` to create one
+
+Virtualenvs shouldn't be checked into github, because they can contain code that is compiled for a particular platform. Instead you should create the virtualenv when you check out a project to work on (or use a tool that does this for you).
+
+After creating a virtualenv, running `source bin/activate` will "activate" it. This changes your path variables so that `python` and `pip` point to the ones inside your virtualenv. You should see the name of the virtualenv added to your shell prompt. 
+
+When you're done working inside the virtualenv, run `deactivate` to go back to your normal shell.
+
+#### Try it out
 - Create one and look inside
 - Activate and deactivate
 - Check you are isolated from system packages
@@ -88,7 +105,10 @@ You just need one command - `pipenv` - to add, remove, or upgrade dependencies. 
 ### Some alternatives to Pipenv you might come accross
 [Poetry](https://github.com/sdispater/poetry) is a competitor to pipenv and seems very similar. I haven’t actually tried it yet, but it probably works just as well.
 
-You can also just use pip + virtualenv on their own. In this case you’ll need to create a file called `requirements.txt` file with all your dependencies in.
+I plotted the PyPi download stats to show the relative adoption of some different tools:
+![Popularity of tools over the last few months](https://raw.githubusercontent.com/MatMoore/python-build-tools-demo/master/tool-usage.png)
+
+You can also just use pip + virtualenv on their own. In this case you’ll need to create a file called `requirements.txt` file with all your dependencies in. However, this can become hard to manage for larger projects.
 
 With this workflow, you add all the dependencies to `requirements.txt` and then run
 `pip install -r requirements.txt` whenever that file is changed. You will need to explicitly [pin your packages](https://nvie.com/posts/pin-your-packages/) to get repeatable builds. However, in order to upgrade a dependency, you then need to re-resolve **its** dependencies, which you can’t do if they’re all pinned!
