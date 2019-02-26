@@ -2,6 +2,8 @@
 
 [This is just a rough outline at the moment]
 
+<img alt="XKCD 1987: Python environment" src="https://raw.githubusercontent.com/MatMoore/python-build-tools-demo/master/python_environment_2x.png" width="492" height="487"/>
+
 ## What this demo will cover
 
 Going to focus on 3 types of tools
