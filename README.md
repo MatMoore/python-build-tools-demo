@@ -36,6 +36,7 @@ Lots of tools have "env" in their name! Don't confuse them!
 
 ### Pyenv
 - Install lots of pythons side by side
+- If using different pythons for different projects, you don't break everything when you upgrade your system
 
 ## Managing application dependencies
 
