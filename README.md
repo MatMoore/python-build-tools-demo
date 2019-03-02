@@ -29,13 +29,8 @@ Where there are multiple ways to do something I will just discuss one solution I
 - What is PYTHONPATH and site-packages?
 - You can also run pip by passing an option to the python interpreter: `python3 -m pip`. The `-m` can be used to execute the code in any python module.
 
-
-### History of python 2 and 3 split
-- http://py3readiness.org/
-- [Six](https://pypi.org/project/six/)
-- Who's still using python 2 on their projects?
-
-### Virtualenv = a copy of your interpreter and packages
+### Isolating python projects from each other
+#### Virtualenv = a copy of your interpreter and packages
 Normally when you install stuff through the `pip` command, you are installing it to some site-packages directory somewhere.
 
 If you have a lot of different projects, they will all share the same dependencies, and your development environment will be different to production.
@@ -44,27 +39,42 @@ We use virtualenvs to solve this problem. A virtualenv is a project-specific dir
 
 It contains its own copy of the python interpreter used to create it, and its own copy of pip.
 
+#### Creating virtualenvs
 There are two tools to create virtualenvs:
 - virtualenv is the original tool, and needs to be itself installed through pip
 - on newer versions of python you can just run `python -m venv DIRECTORY` to create one
 
 Virtualenvs shouldn't be checked into github, because they can contain code that is compiled for a particular platform. Instead you should create the virtualenv when you check out a project to work on (or use a tool that does this for you).
 
+#### Workflow for using virtualenvs directly
 After creating a virtualenv, running `source bin/activate` will "activate" it. This changes your path variables so that `python` and `pip` point to the ones inside your virtualenv. You should see the name of the virtualenv added to your shell prompt. 
 
 When you're done working inside the virtualenv, run `deactivate` to go back to your normal shell.
+
+*NOTE: You can also directly run python or pip by using the full path to your virtualenv, for example `my-env/bin/python my_script.py` or `my-env/bin/pip install foo`.*
 
 #### Try it out
 - Create one and look inside
 - Activate and deactivate
 - Check you are isolated from system packages
+- Check what happened to `sys.path`
 
-### Pyenv
-- Install lots of pythons side by side
+### History of python 2 and 3 split
+- http://py3readiness.org/
+- [Six](https://pypi.org/project/six/)
+- Who's still using python 2 on their projects?
+
+### Using up to date versions of python
+- [Check the documentation](https://www.python.org/doc/versions/) for details of each version
+- New versions are released all the time (8 bug fix releases in 2018)
+- You can see what features are upcoming via the [Python Enhancement Propsals (PEPs)](https://www.python.org/dev/peps/)
+
+#### Installing multiple versions side by side
+- **Pyenv** is a tool that lets you install lots of pythons side by side
 - If using different pythons for different projects, you don't break everything when you upgrade your system
 
 #### Try it out
-You can install pyenv using homebrew (Mac OS) or [through an installer](https://github.com/pyenv/pyenv-installer).
+You can install pyenv using homebrew (MacOS) or [through an installer](https://github.com/pyenv/pyenv-installer).
 
 Once you’ve installed it, you can run `pyenv install -l` to list all the versions of python. Ignore all the ones with prefixes and suffixes and just install the latest one. For example
 `pyenv install 3.6.5`
@@ -82,19 +92,39 @@ Boom! Now you have that version of python. To set it as the default for your pro
 
 ## Managing application dependencies
 
-- `requirements.txt`
-- Semantic versioning
-- `pip freeze`
-- Problems with transitive dependencies
+### requirements.txt files
+- `requirements.txt` specifies minimum, maximum or exact versions of your dependencies
+- Note that it's an *incomplete* specification if it doesn't contain transitive dependencies or exact versions
+- `pip freeze` can generate a complete `requirements.txt` from your local environment
 
-### Pipenv and Pipfile
-- Quite new
-- `Pipfile` replaces `requirements.txt` and is likely to become the standard format
-- Locking ensures repeatable builds
-- Pipfile is for direct dependencies
+### Problems with pip and requirements.txt
+Multiple invocations of pip install can return different results, for various reasons:
+
+- New versions of packages may have been released, so the second invocation gets newer stuff
+- You place a lot of trust in the repository to not [change or remove packages that existed previously](https://www.theregister.co.uk/2016/03/23/npm_left_pad_chaos/)
+
+It's hard to debug stuff if different environments run different code.
+
+Upgrading stuff is usually a good thing, but we should be in control of when that happens, so we can manage it like any other code change.
+
+If dependencies follow [semantic versioning](https://semver.org/), then:
+
+- Patch upgrades are bug fixes or security patches, which are always desirable
+- Minor upgrades are intended to be backwards compatable (but might not be)
+- Major upgrades are not backwards compatable and may require effort to upgrade
+
+If you freeze all your dependencies, then your build will be repeatable but you'll probably be stuck with those versions for a long time. Pip doesn't make it very easy to safely upgrade packages.
+
+Pip is also [notoriously bad at resolving overlapping requirements](https://github.com/pypa/pip/issues/988), which can lead to [all sorts of strange errors](https://medium.com/knerd/the-nine-circles-of-python-dependency-hell-481d53e3e025).
+
+### Enter Pipenv and Pipfile
+- `Pipfile` replaces `requirements.txt` and may become the standard format in the future
+- "Locking" with `Pipenv.lock` ensures repeatable builds
+- Pipfile is for the direct dependencies you care about
 - [Compatable with semantic versioning](https://pipenv.readthedocs.io/en/latest/basics/#specifying-versions-of-a-package) ("I want to be on the latest patch version for 2.4")
 - Analogous to `Gemfile` and `Gemfile.lock` in ruby
-- When you create a project you can choose the python version
+- When you create a project you can choose the python version to use
+- `pyenv` and `pipenv` can be used together
 
 #### Try it out
 Install it by running: `pip install pipenv`
@@ -110,8 +140,9 @@ You just need one command - `pipenv` - to add, remove, or upgrade dependencies. 
 #### Different tools
 [Poetry](https://github.com/sdispater/poetry) solves many of the same problems as Pipenv. [Hatch](https://github.com/ofek/hatch) also has some overlap. I haven't tried either of these tools myself, but they seem a bit more geared towards distributing packages, whereas Pipenv + pipfile is [deliberately not designed for this](https://pipenv.readthedocs.io/en/latest/advanced/#pipfile-vs-setuppy).
 
+[Tox](https://tox.readthedocs.io) is a popular way to test against multiple versions of python. Again, more geared towards libraries than applications.
 
-I plotted the [PyPi download stats](https://packaging.python.org/guides/analyzing-pypi-package-downloads/) to show the relative adoption of some different tools:
+To give an idea of the relative adoption, I plotted the [PyPi download stats](https://packaging.python.org/guides/analyzing-pypi-package-downloads/) for the last few months:
 ![Popularity of tools over the last few months](https://raw.githubusercontent.com/MatMoore/python-build-tools-demo/master/tool-usage.png)
 
 #### Sticking with requirements.txt
@@ -120,7 +151,7 @@ You can also just use pip + virtualenv on their own. In this case you’ll need 
 With this workflow, you add all the dependencies to `requirements.txt` and then run
 `pip install -r requirements.txt` whenever that file is changed.
 
-You will need to explicitly [pin your packages](https://nvie.com/posts/pin-your-packages/) to get repeatable builds. However, in order to upgrade a dependency, you then need to re-resolve **its** dependencies, which you can’t do if they’re all pinned! So this approach makes it harder to maintain larger projects.
+You will need to explicitly [pin your packages](https://nvie.com/posts/pin-your-packages/) to get repeatable builds. However, in order to upgrade a dependency, you then need to re-resolve **its** dependencies, which you can’t do if they’re all pinned. IMO, this approach makes it harder to maintain larger projects.
 
 ## Creating reusable packages
 - Levels of abstraction: classes/functions/data -> modules -> packages -> PyPI package
