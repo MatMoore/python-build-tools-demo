@@ -167,6 +167,7 @@ You will need to explicitly [pin your packages](https://nvie.com/posts/pin-your-
 - https://keepachangelog.com/en/1.0.0/
 
 ## Other resources
+- [Python-Ruby Rosetta stone](./translating-from-ruby.md) - a cheat sheet for rubyists
 - [Python's new package landscape](http://andrewsforge.com/article/python-new-package-landscape/) - blog post covering the same content as this demo
 - [Hitchhikers guide to python](https://docs.python-guide.org/) - an opinionated guide on how to set up python projects
 - [Interpreter options](https://docs.python.org/3/using/cmdline.html#interface-options) - official documentation
