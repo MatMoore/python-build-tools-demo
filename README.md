@@ -1,18 +1,22 @@
 # Python build tools demo
-
-[This is just a rough outline at the moment]
+This demo will show how we can manage python source code, as of early 2019, and how to avoid this:
 
 <img alt="XKCD 1987: Python environment" src="https://raw.githubusercontent.com/MatMoore/python-build-tools-demo/master/python_environment_2x.png" width="492" height="487"/>
 
-## What this demo will cover
+## What we'll cover
 
-Going to focus on 3 types of tools
+The demo will be split into 3 tasks:
 
 - Installing pythons onto computers
 - Managing application dependencies
 - (If there's time) creating reusable python packages
 
-*Note: Lots of tools have "env" in their name! Don't get them confused!*
+### Opinions ahoy
+> "There should be one-- and preferably only one --obvious way to do it." - The Zen of Python
+
+Sadly, this is not the case in Python for the tasks I listed above. In this demo I will introduce the core tools that the python ecosystem depends on (pip and virtualenv/venv), and their limitations.
+
+Where there are multiple ways to do something I will just discuss one solution I'm familiar with, but I'll list alternatives you can research if you want to try something else.
 
 ## Installing pythons
 
@@ -103,19 +107,22 @@ In pipenv-land, you can substitute `pip install` for `pipenv install`, and you d
 You just need one command - `pipenv` - to add, remove, or upgrade dependencies. It also makes builds deterministic by capturing the exact versions of everything in your dependency tree in the `Pipfile.lock` file. This doesn’t matter much when you’re setting up the project, but will save you a lot of pain later down the line.
 
 ### Some alternatives to Pipenv you might come accross
-[Poetry](https://github.com/sdispater/poetry) is a competitor to pipenv and seems very similar. I haven’t actually tried it yet, but it probably works just as well.
+#### Different tools
+[Poetry](https://github.com/sdispater/poetry) solves many of the same problems as Pipenv. [Hatch](https://github.com/ofek/hatch) also has some overlap. I haven't tried either of these tools myself, but they seem a bit more geared towards distributing packages, whereas Pipenv + pipfile is [deliberately not designed for this](https://pipenv.readthedocs.io/en/latest/advanced/#pipfile-vs-setuppy).
+
 
 I plotted the [PyPi download stats](https://packaging.python.org/guides/analyzing-pypi-package-downloads/) to show the relative adoption of some different tools:
 ![Popularity of tools over the last few months](https://raw.githubusercontent.com/MatMoore/python-build-tools-demo/master/tool-usage.png)
 
-You can also just use pip + virtualenv on their own. In this case you’ll need to create a file called `requirements.txt` file with all your dependencies in. However, this can become hard to manage for larger projects.
+#### Sticking with requirements.txt
+You can also just use pip + virtualenv on their own. In this case you’ll need to create a `requirements.txt` file with all your dependencies in.
 
 With this workflow, you add all the dependencies to `requirements.txt` and then run
-`pip install -r requirements.txt` whenever that file is changed. You will need to explicitly [pin your packages](https://nvie.com/posts/pin-your-packages/) to get repeatable builds. However, in order to upgrade a dependency, you then need to re-resolve **its** dependencies, which you can’t do if they’re all pinned!
+`pip install -r requirements.txt` whenever that file is changed.
 
-Note that pipenv + pipfile is not designed for libraries: https://pipenv.readthedocs.io/en/latest/advanced/#pipfile-vs-setuppy
+You will need to explicitly [pin your packages](https://nvie.com/posts/pin-your-packages/) to get repeatable builds. However, in order to upgrade a dependency, you then need to re-resolve **its** dependencies, which you can’t do if they’re all pinned! So this approach makes it harder to maintain larger projects.
 
-## Creating packages
+## Creating reusable packages
 - Levels of abstraction: classes/functions/data -> modules -> packages -> PyPI package
 - Why create standalone packages?
 - Look at [a setup.py for a real package](https://github.com/stub42/pytz/blob/master/src/setup.py)
@@ -129,7 +136,8 @@ Note that pipenv + pipfile is not designed for libraries: https://pipenv.readthe
 - https://keepachangelog.com/en/1.0.0/
 
 ## Other resources
-- [Hitchhikers guide to python](https://docs.python-guide.org/)
-- [Interpreter options](https://docs.python.org/3/using/cmdline.html#interface-options)
-- [Installing packages with pip and virtualenv](https://packaging.python.org/tutorials/installing-packages/#creating-virtual-environments)
-- [Distributing packages](https://docs.python.org/3/distributing/index.html)
+- [Python's new package landscape](http://andrewsforge.com/article/python-new-package-landscape/) - blog post covering the same content as this demo
+- [Hitchhikers guide to python](https://docs.python-guide.org/) - an opinionated guide on how to set up python projects
+- [Interpreter options](https://docs.python.org/3/using/cmdline.html#interface-options) - official documentation
+- [Installing packages with pip and virtualenv](https://packaging.python.org/tutorials/installing-packages/#creating-virtual-environments) - official documention
+- [Distributing packages](https://docs.python.org/3/distributing/index.html) - official documentation
